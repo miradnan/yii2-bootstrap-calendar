@@ -18,22 +18,11 @@ use yii\helpers\ArrayHelper;
 
 class Calendar extends Widget {
 
-    public $viewPath = '@vendor/miradnan/yii2-bootstrap-calendar/tmpls/';
-
     /**
      * @var array clientOptions the HTML attributes for the widget container tag.
      */
     public $clientOptions = [
-        'weekends' => true,
-        'default' => 'month',
-        'editable' => false,
     ];
-    public $source;
-
-    /**
-     * Holds an array of Event Objects
-     * */
-    public $events = [];
 
     /**
      * Define the look n feel for the calendar header, known placeholders are left, center, right
@@ -45,6 +34,17 @@ class Calendar extends Widget {
         'right' => 'month,agendaWeek'
     ];
 
+    /**
+     * This contains all calendar options
+     * @var type 
+     */
+    public $options = [
+        'language' => 'en',
+    ];
+
+    /**
+     * 
+     */
     public function init() {
         parent::init();
     }
@@ -54,35 +54,36 @@ class Calendar extends Widget {
      * @param string $config
      * @return type
      */
-    public function run($config = []) {
+    public function run() {
         $id = $this->getId();
         CalendarAsset::register($this->getView());
 
-        if (!empty($config['id'])) {
-            $id = $config['id'];
-        }
 
-        if (!empty($config['source'])) {
-            $this->source = $config['source'];
-        }
-
-        if (!isset($config['class'])) {
+        if (!isset($this->clientOptions['class'])) {
             $config['class'] = 'calendar-holder';
+        } else {
+            $config['class'] = $this->clientOptions['class'];
+        }
+
+        if (!empty($config['language'])) {
+            $this->options['language'] = $config['language'];
         }
 
         $content = Html::tag('div', null, [
                     'id' => $id
         ]);
 
-        switch (gettype($this->source)) {
+        switch (gettype($this->clientOptions['events_source'])) {
             case 'object':
             case 'array':
-                $this->source = ArrayHelper::toArray($this->source);
-                $this->source = json_encode($this->source, true);
+                $this->clientOptions['events_source'] = ArrayHelper::toArray($this->clientOptions['events_source']);
+
                 break;
         }
 
-        $js = new JsExpression("$(document).ready(function(e){var calendar = $('#" . $id . "').calendar({events_source: " . $this->source . " }); });");
+        $this->clientOptions['events_source'] = (array) $this->clientOptions['events_source'];
+
+        $js = new JsExpression("$(document).ready(function(e){var calendar = $('#" . $id . "').calendar(" . json_encode($this->clientOptions) . "); });");
 
         $content .= Html::tag('script', $js, ['type' => 'text/javascript']);
 
