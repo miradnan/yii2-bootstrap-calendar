@@ -24,8 +24,9 @@ to the ```require``` section of your `composer.json` file.
 use miradnan\bootstrap\Calendar;
 
 echo Calendar::widget([
-	'type' => Alert::TYPE_INFO,
-	'title' => 'Calendar',
+    'id' => 'my-calender',
+    'class' => 'calendar-holder',
+    'source' => $events
 ]);
 ```
 
