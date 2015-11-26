@@ -1,5 +1,13 @@
 <?php
 
+/**
+ * This class is used to embed Bootstrap JQuery Plugin for Yii2 Projects
+ * @copyright Mir Adnan - www.miradnan.com
+ * @link http://www.miradnan.com
+ * @author Mir Adnan <contact@miradnan.com>
+ *
+ */
+
 namespace miradnan\bootstrap;
 
 use yii\bootstrap\Widget;
@@ -9,24 +17,53 @@ use yii\web\JsExpression;
 use yii\helpers\ArrayHelper;
 
 class Calendar extends Widget {
-    
+
     public $viewPath = '@vendor/miradnan/yii2-bootstrap-calendar/tmpls/';
+
+    /**
+     * @var array clientOptions the HTML attributes for the widget container tag.
+     */
+    public $clientOptions = [
+        'weekends' => true,
+        'default' => 'month',
+        'editable' => false,
+    ];
+    public $source;
+
+    /**
+     * Holds an array of Event Objects
+     * */
+    public $events = [];
+
+    /**
+     * Define the look n feel for the calendar header, known placeholders are left, center, right
+     * @var array header format
+     */
+    public $header = [
+        'center' => 'title',
+        'left' => 'prev,next today',
+        'right' => 'month,agendaWeek'
+    ];
 
     public function init() {
         parent::init();
     }
 
-    public static function widget($config = []) {
-        
-        $id = 'miradnan-bootstrap-calendar';
-        $source = null;
+    /**
+     * 
+     * @param string $config
+     * @return type
+     */
+    public function run($config = []) {
+        $id = $this->getId();
+        CalendarAsset::register($this->getView());
 
         if (!empty($config['id'])) {
             $id = $config['id'];
         }
 
         if (!empty($config['source'])) {
-            $source = $config['source'];
+            $this->source = $config['source'];
         }
 
         if (!isset($config['class'])) {
@@ -37,18 +74,19 @@ class Calendar extends Widget {
                     'id' => $id
         ]);
 
-        switch (gettype($source)) {
+        switch (gettype($this->source)) {
             case 'object':
             case 'array':
-                $source = ArrayHelper::toArray($source);
-                $source = json_encode($source, true);
+                $this->source = ArrayHelper::toArray($this->source);
+                $this->source = json_encode($this->source, true);
                 break;
         }
 
-        $js = new \yii\web\JsExpression("var calendar = $('#" . $id . "').calendar({events_source: " . sprintf('[%s]', $source) . " });");
+        $js = new JsExpression("$(document).ready(function(e){var calendar = $('#" . $id . "').calendar({events_source: " . $this->source . " }); });");
 
         $content .= Html::tag('script', $js, ['type' => 'text/javascript']);
 
+        $this->registerPlugin(__CLASS__);
 
         return Html::tag('div', $content, [
                     'class' => $config['class']
