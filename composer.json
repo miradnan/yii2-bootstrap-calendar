@@ -1,7 +1,7 @@
 {
     "name": "miradnan/yii2-bootstrap-calendar",
     "description": "Enhanced Yii2 wrapper for the Bootstrap Calendar",
-    "keywords": ["yii2", "extension", "widget", "bootstrap", "calendar", "bootstrap calendar", "jquery", "fullcalendar"],
+    "keywords": ["yii2", "extension", "widget", "bootstrap", "calendar", "bootstrap calendar", "yii2 bootstrap calendar"],
     "homepage": "https://github.com/kartik-v/yii2-widget-select2",
     "type": "yii2-extension",
     "license": "BSD-3-Clause",
@@ -12,6 +12,7 @@
             "homepage": "http://www.miradnan.com/"
         }
     ],
+    "minimum-stability": "stable",
     "require": {
         "serhioromano/bootstrap-calendar": "0.2.4",
         "yiisoft/yii2-jui": "~2.0.0"
