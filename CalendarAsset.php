@@ -27,7 +27,7 @@ class CalendarAsset extends AssetBundle {
      */
     public $depends = [
         'yii\bootstrap\BootstrapAsset',
-            //  'yii\jui\JuiAsset'
+        'yii\jui\JuiAsset'
     ];
     public $jsOptions = array(
         'position' => \yii\web\View::POS_HEAD
