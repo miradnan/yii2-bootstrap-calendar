@@ -13,6 +13,7 @@
         }
     ],
     "require": {
+        "serhioromano/bootstrap-calendar": "0.2.4"
     },
     "autoload": {
         "psr-4": {
